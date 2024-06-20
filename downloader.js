@@ -1,7 +1,7 @@
 async function download_splat(url_param) {
     const url = new URL(
         url_param,
-        "https://huggingface.co/datasets/gafoart/gafoart/resolve/main/",
+        "https://huggingface.co/datasets/satyoshi/gauzilla-data/resolve/main/",
     );
 
     const req = await fetch(url, {
