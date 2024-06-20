@@ -4,8 +4,7 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
     <title>Gauzilla</title>
     <style>
-        html,
-        body {
+        html, body {
             /* Allow canvas to fill entire web page: */
             overflow: hidden;
             margin: 0 !important;
@@ -24,10 +23,12 @@
 <body>
     <script type="module">
         import init, { run } from "./pkg/gauzilla.js";
-        import { loadGaussianSplat } from './main.js'; // Make sure main.js exports loadGaussianSplat function
+        import { loadGaussianSplat } from "./helper.js"; // Update to import from helper.js
 
         init().then(() => {
             run();
+
+            // Extract the URL parameter for the Gaussian splat file
             const urlParams = new URLSearchParams(window.location.search);
             const splatUrl = urlParams.get('url');
             if (splatUrl) {
