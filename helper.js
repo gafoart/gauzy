@@ -75,15 +75,14 @@ export function loadGaussianSplat(splatUrl) {
     worker.onmessage = function(event) {
         const { buffer } = event.data;
         console.log("Received data from worker:", buffer);
-        // You need to implement the logic to parse and render the point cloud data from the buffer.
-        // Example:
-        // parseAndRenderPointCloud(buffer);
+        // Implement the logic to parse and render the point cloud data from the buffer
     };
 
     worker.onerror = function(error) {
         console.error("Error in worker:", error);
     };
 }
+
 
 
 
