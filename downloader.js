@@ -1,32 +1,31 @@
 async function download_splat(url_param) {
-    const url = new URL(url_param);
+    try {
+        const url = new URL(url_param);
+        const req = await fetch(url, { mode: "cors", credentials: "omit" });
 
-    const req = await fetch(url, {
-        mode: "cors",
-        credentials: "omit",
-    });
-    console.log(req);
-    if (req.status != 200)
-        throw new Error("download_splat(): HTTP status: " + req.status + ", failed to load " + req.url);
+        if (req.status !== 200) {
+            throw new Error(`HTTP status: ${req.status}, failed to load ${req.url}`);
+        }
 
-    const reader = req.body.getReader();
-    let splatData = new Uint8Array(req.headers.get("content-length"));
-    let bytesRead = 0;
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        const reader = req.body.getReader();
+        const contentLength = +req.headers.get("content-length");
+        let splatData = new Uint8Array(contentLength);
+        let bytesRead = 0;
 
-        splatData.set(value, bytesRead);
-        bytesRead += value.length;
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-        postMessage({
-            bytes: bytesRead,
-            buffer: splatData,
-        });
+            splatData.set(value, bytesRead);
+            bytesRead += value.length;
+
+            postMessage({ bytes: bytesRead, buffer: splatData });
+        }
+    } catch (error) {
+        console.error("Error in download_splat:", error);
     }
 }
 
 self.onmessage = async function(event) {
-    console.log("downloader.js: Received message:", event.data);
     await download_splat(event.data);
 };
